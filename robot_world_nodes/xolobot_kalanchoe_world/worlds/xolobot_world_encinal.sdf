@@ -1,0 +1,275 @@
+<?xml version="1.0" ?>
+<!--
+  Try sending commands:
+    ign topic -t "/model/arlo_xolobot/cmd_vel" -m gz.msgs.Twist -p "linear: {x: 1.0}, angular: {z: -0.1}"
+    ros2 topic pub /model/arlo_xolobot/cmd_vel geometry_msgs/msg/Twist "{linear: {x: 5.0, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: -0.1}}"
+  Listen to odometry:
+    ign topic -e -t /model/arlo_xolobot/odometry
+    ros2 topic echo /model/arlo_xolobot/odometry
+-->
+<sdf version="1.8">
+  <world name="encinal_uam">
+
+    <plugin
+      filename="libignition-gazebo-physics-system.so"
+      name="ignition::gazebo::systems::Physics">
+    </plugin>
+    <plugin
+      filename="libignition-gazebo-sensors-system.so"
+      name="ignition::gazebo::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+    <plugin
+      filename="libignition-gazebo-scene-broadcaster-system.so"
+      name="ignition::gazebo::systems::SceneBroadcaster">
+    </plugin>
+
+    <plugin
+      filename="libignition-gazebo-user-commands-system.so"
+      name="ignition::gazebo::systems::UserCommands">
+    </plugin>
+
+    <light name="sun" type="directional">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 10 0 0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <constant>0.9</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <direction>-0.5 0.1 -0.9</direction>
+    </light>
+
+
+   <!-- <include>
+      <static>true</static>
+      <name>pasto</name>
+      <pose>0 0 0 0 0 0</pose>
+      <uri>model://ground_forest/</uri>
+    </include>  -->
+
+    <include>
+      <static>true</static>
+      <name>piso_encinal</name>
+      <pose>0 0 0 0 0 0</pose>
+      <uri>model://piso_patio_piedras/</uri>
+      <!-- <uri>model://piso_patio_talavera/</uri> -->
+      <!-- <uri>model://piso_patio_rustico/</uri> -->
+    </include>
+
+
+    <!-- <include>
+      <static>true</static>
+      <name>Encinal</name>
+      <pose>10 10 0 0 0 0</pose>
+      <uri>model://three_oaks/</uri>
+    </include> -->
+
+    <model name="ground_plane">
+      <static>true</static>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+          <material>
+            <ambient>0.5 0.75 0 1</ambient>
+            <diffuse>0.7 0.9 0 1</diffuse>
+            <specular>0.2 0.2 0.2 1</specular>
+            <emissive>0.1 0 0.1 1</emissive>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="arlo_xolobot">
+      <self_collide>false</self_collide>
+      <include merge="true">
+        <uri>package://xolobot_blueprint/models/arlodrive</uri>
+      </include>            
+      <pose>0 0 0.06 0 0 0.0</pose>
+      <!-- <pose>0 0 0.01 0 0 1.570796</pose> -->
+      <!-- <pose>0 0 0.01 0 0 3.14159</pose> -->
+
+      <!-- <plugin
+        filename="libignition-gazebo-joint-state-publisher-system.so"
+        name="ignition::gazebo::systems::JointStatePublisher">
+      </plugin> -->
+
+      <plugin
+        filename="libignition-gazebo-pose-publisher-system.so"
+        name="ignition::gazebo::systems::PosePublisher">
+        <publish_link_pose>true</publish_link_pose>
+        <use_pose_vector_msg>true</use_pose_vector_msg>
+        <static_publisher>false</static_publisher>
+        <update_frequency>1</update_frequency>
+        <static_update_frequency>1</static_update_frequency>
+      </plugin>
+
+      <plugin
+        filename="libignition-gazebo-odometry-publisher-system.so"
+        name="ignition::gazebo::systems::OdometryPublisher">
+        <odom_frame>arlo_xolobot/odom</odom_frame>
+        <robot_base_frame>arlo_xolobot</robot_base_frame>
+        <odom_publish_frequency>20</odom_publish_frequency>
+        <odom_topic>/arlo_xolobot/odom</odom_topic>
+      </plugin> 
+    </model>
+
+    <!-- <model name="jade">
+      <self_collide>false</self_collide>
+      <pose>-0.05 0 0.2 0 0 0</pose>
+      <include merge="true">
+        <uri>model://jade</uri>
+      </include>
+    </model> -->
+
+    <model name="kalanchoe">
+      <self_collide>false</self_collide>
+      <pose>-0.04 0 0.38 0 0 0</pose>
+      <include merge="true">
+        <uri>model://kalanchoe</uri>
+      </include>
+    </model> 
+
+    <!-- <model name='mariposa azul'>
+      <include>
+        <uri>model://mariposa_2</uri>
+      </include>
+      <pose>0.375 0.15 0.75 0 0.78 3.14116</pose>
+    </model>
+
+    <model name='mariposa monarca'>
+      <include>
+        <uri>model://mariposa_1</uri>
+      </include>
+      <pose>0.4 -0.15 0.85 0 -0.78 0</pose>
+    </model> -->
+
+    <model name="zona_riego">
+      <self_collide>false</self_collide>
+      <pose>5.0 5.0 0.012 0 0 0</pose>
+      <static>true</static>
+      <include merge="true">
+        <uri>model://cerebral_carpet</uri>
+      </include>
+      
+      <!-- Plugin para publicar la posición de la zona de riego. -->
+      <plugin
+        filename="libignition-gazebo-odometry-publisher-system.so"
+        name="ignition::gazebo::systems::OdometryPublisher">
+        <odom_frame>riego/odom</odom_frame>
+        <robot_base_frame>cerebral_carpet</robot_base_frame>
+        <odom_publish_frequency>1</odom_publish_frequency>
+        <odom_topic>model/watering_station/odom</odom_topic>
+      </plugin> 
+
+    </model> 
+
+    <model name="llave_agua">
+      <self_collide>false</self_collide>
+      <pose>5.0 5.0 0.85 0 0 0</pose>
+      <static>1</static>
+      <include merge="true">
+        <uri>model://llave_agua</uri>
+      </include>
+    </model> 
+
+    <light name='awuita' type='spot'>
+      <pose>5 5 2 0 0 0</pose>
+      <diffuse>0.529 0.871 0.988 1</diffuse>
+      <specular>0.027 0.51 0.678 1</specular>
+      <direction>0 0 -1</direction>
+      <attenuation>
+        <range>25</range>
+        <constant>1.1</constant>
+        <linear>0.2</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <cast_shadows>0</cast_shadows>
+      <spot>
+        <inner_angle>0.3</inner_angle>
+        <outer_angle>1.3</outer_angle>
+        <falloff>1</falloff>
+      </spot>
+    </light>
+
+    <model name="zona_sol">
+      <self_collide>false</self_collide>
+      <pose>-5.0 -5.0 0.012 0 0 0</pose>
+      <static>true</static>
+      <include merge="true">
+        <uri>model://cerebral_carpet</uri>
+      </include>
+
+      <!-- Plugin para publicar la posición de la zona de SOL. -->
+      <!-- <plugin
+        filename="libignition-gazebo-pose-publisher-system.so"
+        name="ignition::gazebo::systems::PosePublisher">
+        <publish_link_pose>true</publish_link_pose>
+        <use_pose_vector_msg>true</use_pose_vector_msg>
+        <static_publisher>false</static_publisher>
+        <update_frequency>1</update_frequency>
+        <static_update_frequency>1</static_update_frequency>
+      </plugin> -->
+
+      <plugin
+        filename="libignition-gazebo-odometry-publisher-system.so"
+        name="ignition::gazebo::systems::OdometryPublisher">
+        <odom_frame>sol/odom</odom_frame>
+        <robot_base_frame>cerebral_carpet</robot_base_frame>
+        <odom_publish_frequency>1</odom_publish_frequency>
+        <odom_topic>model/light_station/odom</odom_topic>
+      </plugin>
+
+    </model>
+
+    <light name='mini_sol' type='spot'>
+      <pose>-5 -5 1.5 0 0 0</pose>
+      <diffuse>1 0.89 0.66 1</diffuse>
+      <specular>0.71 0.502 0.027 1</specular>
+      <direction>0 0 -1</direction>
+      <attenuation>
+        <range>25</range>
+        <constant>1.4</constant>
+        <linear>0.4</linear>
+        <quadratic>0.005</quadratic>
+      </attenuation>
+      <cast_shadows>0</cast_shadows>
+      <spot>
+        <inner_angle>0.3</inner_angle>
+        <outer_angle>1.6</outer_angle>
+        <falloff>1</falloff>
+      </spot>
+    </light>
+
+    <model name='lampara_cocina'>
+      <include>
+        <uri>model://Kitchen_Pendant_Lamp</uri>
+      </include>
+      <pose>-5 -5 1.3 0 0 0</pose>
+    </model>
+
+    <!-- <model name='cerezo'>
+      <include>
+        <uri>model://sakura_tree_1</uri>
+      </include>
+      <pose>5 -4 0.0 0 0 0</pose>
+    </model> -->
+    
+  </world>
+</sdf>
